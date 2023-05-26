@@ -20,6 +20,7 @@ use std::io;
 use std::marker::PhantomData;
 use std::mem;
 use std::ops::Deref;
+use std::os::unix::prelude::RawFd;
 use std::time::Duration;
 
 thread_local! {
@@ -287,6 +288,11 @@ impl<T> IpcReceiver<T> where T: for<'de> Deserialize<'de> + Serialize {
         OpaqueIpcReceiver {
             os_receiver: self.os_receiver,
         }
+    }
+
+    /// Get the [RawFd] of the underlying receiver.
+    pub fn as_raw_fd(&self) -> RawFd {
+        self.os_receiver.as_raw_fd()
     }
 }
 

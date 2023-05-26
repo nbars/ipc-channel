@@ -27,6 +27,7 @@ use std::io;
 use std::marker::PhantomData;
 use std::mem;
 use std::ops::{Deref, RangeFrom};
+use std::os::unix::prelude::RawFd;
 use std::ptr;
 use std::slice;
 use std::sync::Arc;
@@ -154,6 +155,12 @@ impl OsIpcReceiver {
                     -> Result<(Vec<u8>, Vec<OsOpaqueIpcChannel>, Vec<OsIpcSharedMemory>),UnixError> {
         recv(self.fd.get(), BlockingMode::Timeout(duration))
     }
+
+    /// Get the underlying [RawFd] of the receiver.
+    pub fn as_raw_fd(&self) -> RawFd {
+        self.fd.get()
+    }
+
 }
 
 #[derive(PartialEq, Debug)]
